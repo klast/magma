@@ -438,12 +438,12 @@ if (WIN32)
     #message( "libmagma_all_f   ${libmagma_all_f}"   )
 
     # on Windows, Fortran files aren't compiled if listed here...
-    cuda_add_library( magma STATIC  ${libmagma_all_cpp} )
+    cuda_add_library( magma STATIC ${libmagma_all_cpp} )
     target_link_libraries( magma
         ${LAPACK_LIBRARIES}
         ${CUDA_CUDART_LIBRARY}
         ${CUDA_CUBLAS_LIBRARIES}
-        # ${CUDA_cusparse_LIBRARY}
+        ${CUDA_cusparse_LIBRARY}
     )
 
     # no Fortran files at the moment (how to test libmagma_all_f is not empty?),
@@ -466,7 +466,7 @@ else()
         ${LAPACK_LIBRARIES}
         ${CUDA_CUDART_LIBRARY}
         ${CUDA_CUBLAS_LIBRARIES}
-        # ${CUDA_cusparse_LIBRARY}
+        ${CUDA_cusparse_LIBRARY}
     )
 
     if (USE_FORTRAN)
@@ -483,33 +483,33 @@ endif()
 add_custom_target( lib DEPENDS magma )
 
 
-# # ----------------------------------------
-# # compile lapacktest library
-# # If use fortran, compile only Fortran files, not magma_[sdcz]_no_fortran.cpp
-# # else,           compile only C++     files, not Fortran files
-# if (USE_FORTRAN)
-#     foreach( filename ${liblapacktest_all} )
-#         if (filename MATCHES "\\.(f|f90|F90)$")
-#             list( APPEND liblapacktest_all_f ${filename} )
-#         endif()
-#     endforeach()
-#     add_library( lapacktest ${liblapacktest_all_f} )
-# else()
-#     # alternatively, use only C/C++/CUDA files, including magma_[sdcz]_no_fortran.cpp
-#     foreach( filename ${liblapacktest_all} )
-#         if (filename MATCHES "\\.(c|cu|cpp)$")
-#             list( APPEND liblapacktest_all_cpp ${filename} )
-#         endif()
-#     endforeach()
-#     add_library( lapacktest ${liblapacktest_all_cpp} )
-# endif()
-# target_link_libraries( lapacktest
-#     ${blas_fix}
-#     ${LAPACK_LIBRARIES}
-# )
+ # ----------------------------------------
+ # compile lapacktest library
+ # If use fortran, compile only Fortran files, not magma_[sdcz]_no_fortran.cpp
+ # else,           compile only C++     files, not Fortran files
+ if (USE_FORTRAN)
+     foreach( filename ${liblapacktest_all} )
+         if (filename MATCHES "\\.(f|f90|F90)$")
+             list( APPEND liblapacktest_all_f ${filename} )
+         endif()
+     endforeach()
+     add_library( lapacktest ${liblapacktest_all_f} )
+ else()
+     # alternatively, use only C/C++/CUDA files, including magma_[sdcz]_no_fortran.cpp
+     foreach( filename ${liblapacktest_all} )
+         if (filename MATCHES "\\.(c|cu|cpp)$")
+             list( APPEND liblapacktest_all_cpp ${filename} )
+         endif()
+     endforeach()
+     add_library( lapacktest ${liblapacktest_all_cpp} )
+ endif()
+ target_link_libraries( lapacktest
+     ${blas_fix}
+     ${LAPACK_LIBRARIES}
+ )
 
 
-# # ----------------------------------------
+ # ----------------------------------------
 # # compile tester library
 # add_library( tester ${libtest_all} )
 # target_link_libraries( tester
@@ -542,12 +542,12 @@ add_custom_target( lib DEPENDS magma )
 # # ----------------------------------------
 # # compile each tester
 
-# # save testers to testing/
-# # save tester lib files to testing_lib/ to avoid cluttering lib/
+ # save testers to testing/
+ # save tester lib files to testing_lib/ to avoid cluttering lib/
 # set( CMAKE_RUNTIME_OUTPUT_DIRECTORY testing )
 # set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY testing_lib )
 # set( CMAKE_LIBRARY_OUTPUT_DIRECTORY testing_lib )
-
+#
 # # skip Fortran testers, which require an extra file from CUDA
 # foreach( filename ${testing_all} )
 #     if (filename MATCHES "\\.(c|cu|cpp)$")

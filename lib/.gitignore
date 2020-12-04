@@ -1,0 +1,11 @@
+*.obj
+*.exe
+*.log
+*.dll*
+*.lib
+*.cpp
+*.cmake
+*.h
+*.txt
+*.depend
+*.exp

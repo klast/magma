@@ -1,0 +1,16 @@
+*.obj
+*.exe
+*.log
+*.dll*
+*.lib
+*.cpp
+*.cmake
+*.h
+*.txt
+*.depend
+*.exp
+*.pre-gen
+*.check_cache
+*.c
+*.bin
+*.ninja*
